@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Legend — Earn</title>
+  <meta name="description" content="Earn up to 14.89% with industry-leading rates, powered by open markets and secured by public blockchains.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            dark: '#131313',
+            light: '#f8f8f8',
+            'grey-100': '#f5f5f5',
+            'grey-300': '#e8e8e8',
+            'grey-600': '#b2b2b2',
+            'grey-700': '#949494',
+            'grey-800': '#6c6c6c',
+            'grey-1000': '#474747',
+            'grey-1100': '#383737',
+            'grey-1200': '#2d2d2d',
+            'text-1': '#2e2e2e',
+            'text-2': 'rgba(46,46,46,0.6)',
+            'text-3': 'rgba(46,46,46,0.4)',
+            green: '#008500',
+          },
+          fontFamily: {
+            knapp: ['Knapp', 'system-ui', 'sans-serif'],
+            mono: ['ABC Diatype Mono', 'ui-monospace', 'monospace'],
+          },
+          borderColor: { border: 'rgba(153,153,151,0.4)' }
+        }
+      }
+    }
+  </script>
+  <style>
+    @font-face { font-family: 'Knapp'; src: url('fonts/Knapp-Light.woff2') format('woff2'); font-weight: 300; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'Knapp'; src: url('fonts/Knapp-Regular.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'Knapp'; src: url('fonts/Knapp-Medium.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'Knapp'; src: url('fonts/Knapp-Bold.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: swap; }
+    @font-face { font-family: 'ABC Diatype Mono'; src: url('fonts/ABCDiatypeMono-Regular.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Knapp', system-ui, sans-serif; background: #f8f8f8; color: #2e2e2e; overflow-x: hidden; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+    .gl { position: absolute; width: 1px; top: 0; bottom: 0; background: repeating-linear-gradient(to bottom, rgba(19,19,19,0.08) 0px, rgba(19,19,19,0.08) 4px, transparent 4px, transparent 8px); pointer-events: none; }
+    .gl-h { position: absolute; height: 1px; left: 0; right: 0; background: repeating-linear-gradient(to right, rgba(19,19,19,0.08) 0px, rgba(19,19,19,0.08) 4px, transparent 4px, transparent 8px); pointer-events: none; }
+    .gl-dk { background: repeating-linear-gradient(to bottom, rgba(255,255,255,0.06) 0px, rgba(255,255,255,0.06) 4px, transparent 4px, transparent 8px); }
+
+    .slabel { font-family: 'ABC Diatype Mono', monospace; font-size: 11px; letter-spacing: 0.66px; text-transform: uppercase; line-height: 1.35; display: inline-flex; align-items: center; gap: 8px; }
+    .slabel::before { content: ''; display: block; width: 0; height: 4px; border-left: 1px dashed rgba(19,19,19,0.15); }
+    .slabel-dk::before { border-left-color: rgba(255,255,255,0.15); }
+
+    .sh { font-weight: 500; font-size: 44px; line-height: 1.1; letter-spacing: -0.44px; color: #2e2e2e; }
+
+    .bar-fill { border-radius: 4px; position: relative; overflow: hidden; }
+    .bar-fill-grey { background: repeating-linear-gradient(-55deg, transparent, transparent 6px, rgba(19,19,19,0.04) 6px, rgba(19,19,19,0.04) 7px); border: 1px solid rgba(19,19,19,0.1); }
+    .bar-fill-green { background: repeating-linear-gradient(-55deg, rgba(0,133,0,0.06), rgba(0,133,0,0.06) 6px, rgba(0,133,0,0.12) 6px, rgba(0,133,0,0.12) 7px); border: 1px solid rgba(0,133,0,0.25); }
+
+    .card-visual { background: #ededed; border: 1px solid rgba(231,229,224,0.1); border-radius: 28px; }
+
+    .faq-item { overflow: hidden; }
+    .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.5s cubic-bezier(0.4,0,0.2,1), padding 0.5s cubic-bezier(0.4,0,0.2,1); padding: 0; }
+    .faq-item.open .faq-answer { max-height: 300px; padding-top: 8px; padding-bottom: 24px; }
+    .faq-toggle { transition: transform 0.4s cubic-bezier(0.4,0,0.2,1); }
+    .faq-item.open .faq-toggle { transform: rotate(45deg); }
+
+    .nav-glass { backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); background: rgba(255,255,255,0.5); border: 0.5px solid #f5f5f5; box-shadow: 0 2px 2px rgba(0,0,0,0.05); }
+    .reveal { opacity: 0; transform: translateY(30px); will-change: opacity, transform; }
+    .hero-reveal { opacity: 0; will-change: opacity; }
+    .comparison-row:hover { background: rgba(0,133,0,0.02); }
+    .market-card { transition: background 0.3s ease, transform 0.3s ease; }
+    .market-card:hover { background: rgba(0,0,0,0.02); transform: translateY(-2px); }
+    .cta-btn { position: relative; overflow: hidden; }
+    .cta-btn::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent); transform: translateX(-100%); transition: transform 0.6s ease; }
+    .cta-btn:hover::after { transform: translateX(100%); }
+    .social-btn { transition: transform 0.3s ease, background 0.3s ease; }
+    .social-btn:hover { transform: translateY(-2px); background: #474747; }
+
+    @media (max-width: 1023px) {
+      .gl, .gl-h { display: none; }
+      .sh { font-size: 32px; }
+
+      /* Force all sections to auto height and flow layout */
+      #hero,
+      #hero ~ section,
+      footer {
+        height: auto !important;
+        position: relative !important;
+        padding: 60px 20px !important;
+        border-radius: 0 !important;
+      }
+
+      /* Hero overrides */
+      #hero {
+        min-height: 100vh;
+        min-height: 100svh;
+        padding: 0 !important;
+      }
+      #hero > div:not([class*="gl"]):not([style*="backdrop"]) {
+        position: relative !important;
+        left: auto !important;
+        top: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        width: 100% !important;
+      }
+      #hero > .absolute.inset-0.z-\[5\] {
+        position: relative !important;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        padding: 100px 20px 40px;
+      }
+      #hero > .absolute.inset-0.z-\[5\] > .hero-reveal {
+        position: relative !important;
+        left: auto !important;
+        top: auto !important;
+        width: 100% !important;
+        opacity: 1 !important;
+      }
+      #hero h1 { font-size: 40px !important; }
+      #hero .absolute.z-\[3\] { display: none; }
+
+      /* Generic: convert absolutely-positioned children to flow */
+      section:not(#hero) > .absolute:not(.gl):not([class*="gl"]),
+      section:not(#hero) > div > .absolute:not(.gl):not([class*="gl"]),
+      footer > .relative > .absolute {
+        position: relative !important;
+        left: auto !important;
+        top: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        width: 100% !important;
+        margin-bottom: 24px;
+      }
+
+      /* Section headings — undo the container trick */
+      section .sh {
+        text-indent: 0 !important;
+        padding-left: 0 !important;
+      }
+      section .slabel {
+        position: relative !important;
+        display: block;
+        margin-bottom: 8px;
+      }
+
+      /* Section 2: phone visual */
+      section:nth-of-type(2) .float-anim { animation: none; }
+      section:nth-of-type(2) [style*="width:878px"] {
+        width: 100% !important;
+        height: 400px !important;
+      }
+
+      /* Section 3: bars */
+      .bar-row { flex-wrap: wrap; }
+      .bar-fill { height: 60px !important; }
+      .bar-row .bar-label p:first-child { font-size: 28px !important; }
+
+      /* Section 4: feature cards */
+      section:nth-of-type(4) [style*="width:464px"],
+      section:nth-of-type(4) [style*="width:454px"] {
+        width: 100% !important;
+        height: auto !important;
+      }
+      section:nth-of-type(4) [style*="width:424px"],
+      section:nth-of-type(4) [style*="width:414px"] {
+        width: 100% !important;
+        height: 300px !important;
+        margin: 0 !important;
+      }
+      section:nth-of-type(4) .card-visual img { object-fit: contain !important; }
+      /* Large body text in features section */
+      section:nth-of-type(4) [style*="width:767px"] { font-size: 24px !important; }
+
+      /* Section 5: market grid */
+      .market-card {
+        width: 100% !important;
+        height: auto !important;
+      }
+      section:nth-of-type(5) .grid { grid-template-columns: repeat(2, 1fr) !important; }
+      section:nth-of-type(5) [style*="width:918px"] { width: 100% !important; }
+      section:nth-of-type(5) [style*="width:191px"] { width: auto !important; }
+
+      /* Section 6: comparison table — horizontal scroll */
+      section:nth-of-type(6) [style*="width:1376px"] {
+        width: 100% !important;
+        overflow-x: auto;
+      }
+      section:nth-of-type(6) .comparison-row,
+      section:nth-of-type(6) [style*="height:79px"] {
+        min-width: 900px;
+      }
+      section:nth-of-type(6) [style*="width:490px"] { width: 160px !important; min-width: 160px; }
+      section:nth-of-type(6) [style*="width:854px"] { width: 740px !important; }
+
+      /* Section 7: FAQ — stack heading above questions */
+      section.bg-dark { padding: 60px 20px !important; }
+      section.bg-dark > .relative {
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+      }
+      section.bg-dark .sh { font-size: 28px !important; }
+      section.bg-dark [style*="margin-left:487px"] {
+        margin-left: 0 !important;
+        width: 100% !important;
+      }
+      section.bg-dark [style*="width:455px"] {
+        position: relative !important;
+        left: auto !important;
+        top: auto !important;
+        width: 100% !important;
+      }
+
+      /* Footer */
+      footer { height: auto !important; min-height: 800px; }
+      footer > .relative { position: relative !important; display: flex; flex-direction: column; gap: 20px; padding: 0 20px; }
+      footer > .relative > .absolute {
+        position: relative !important;
+        left: auto !important;
+        top: auto !important;
+        width: 100% !important;
+        margin: 0;
+      }
+      footer [style*="width:261px"] p,
+      footer [style*="width:416px"] p { font-size: 32px !important; }
+      footer [style*="top:435px"] { top: auto !important; bottom: 0; height: 400px !important; }
+      footer [style*="top:356px"] { display: none; }
+      footer [style*="top:380px"] {
+        flex-direction: column !important;
+        gap: 8px !important;
+        width: 100% !important;
+      }
+      footer [style*="top:380px"] > div { flex-direction: column !important; gap: 4px !important; }
+      footer [style*="left:1256px"] { left: auto !important; }
+    }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+    .float-anim { animation: float 6s ease-in-out infinite; }
+  </style>
+</head>
+<body>
+
+<!-- ===== NAV (fixed) ===== -->
+<nav id="nav" class="fixed top-0 left-0 right-0 z-50 px-4 lg:px-[52px] py-4 lg:py-5 transition-all duration-500">
+  <div class="flex items-center justify-between max-w-[1440px] mx-auto">
+    <a href="#" class="shrink-0"><img src="images/logo-full.svg" alt="Legend" class="h-[28px] w-auto"></a>
+    <div id="nav-banner" class="hidden lg:flex absolute left-1/2 -translate-x-1/2 top-[32px] nav-glass rounded-xl px-3 pr-2 py-1 items-center gap-1.5 transition-opacity">
+      <span class="w-1 h-1 rounded-full bg-grey-700"></span>
+      <span class="text-grey-800 text-xs tracking-[0.24px]">Waitlist is now closed! Legend is out on <span class="font-medium">iOS</span></span>
+      <svg class="w-3 h-3 text-grey-800" viewBox="0 0 12 12" fill="none"><path d="M4.5 2.5L8 6L4.5 9.5" stroke="currentColor" stroke-width="1.2"/></svg>
+    </div>
+    <div class="nav-glass rounded-xl p-1 flex items-center gap-1">
+      <button class="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-black/5 transition-colors"><img src="images/menu-icon.svg" alt="Menu" class="w-10 h-10"></button>
+      <a href="#" class="cta-btn bg-dark text-[#ededed] rounded-lg px-4 py-[11px] flex items-center gap-2">
+        <img src="images/apple-icon.svg" alt="" class="w-[18px] h-[18px]">
+        <span class="font-mono text-[13px] tracking-[0.78px] uppercase leading-none pt-px">Download</span>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== SECTION 1: HERO (880px) ===== -->
+<section id="hero" class="relative w-full bg-light overflow-hidden" style="height:880px;">
+  <video autoplay muted loop playsinline poster="images/hero-bg.png" class="absolute inset-0 w-full h-full object-cover" id="hero-video">
+    <source src="images/hero-video.mp4" type="video/mp4">
+  </video>
+  <div class="absolute left-0 right-0 z-[1]" style="top:480px;height:400px;background:linear-gradient(to bottom, rgba(248,248,248,0) 0%, rgba(248,248,248,0.6) 20%, rgba(248,248,248,0.9) 40%, rgba(248,248,248,1) 55%, rgba(248,248,248,1) 100%);"></div>
+  <div class="absolute z-[2]" style="left:32px;right:32px;top:0;bottom:0;">
+    <div class="gl" style="left:0"></div><div class="gl" style="left:458px"></div><div class="gl" style="right:0"></div>
+    <div class="gl-h" style="top:88px"></div><div class="gl-h" style="bottom:0"></div>
+  </div>
+  <div class="absolute z-[3]" style="top:0;left:32px;right:32px;height:88px;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);background:rgba(255,255,255,0.08);"></div>
+  <div class="absolute inset-0 z-[5]">
+    <!-- Figma: (64, 569) w:396 h:158 -->
+    <div class="hero-reveal" style="position:absolute;left:64px;top:569px;width:396px;">
+      <div class="flex items-center gap-1.5 px-1">
+        <img src="images/earn-icon.svg" alt="" class="w-4 h-4">
+        <span class="font-knapp font-medium text-[20px] text-green tracking-[-0.2px] leading-[1.3]">Earn</span>
+      </div>
+      <h1 class="font-knapp font-medium text-[60px] tracking-[-0.6px] leading-none text-text-1 mt-[12px]">Earn up to <br><span class="text-green" id="hero-rate">14.89%</span></h1>
+    </div>
+    <!-- Figma: (66, 768) w:394 h:32 -->
+    <div class="hero-reveal" style="position:absolute;left:66px;top:768px;width:394px;">
+      <div class="flex items-center gap-4 opacity-50">
+        <span class="font-mono text-[11px] tracking-[0.66px] uppercase text-grey-800">Powered by</span>
+        <div class="flex items-center gap-5">
+          <img src="images/morpho-logo.svg" alt="Morpho" class="h-[16px] opacity-70">
+          <img src="images/compound-logo.svg" alt="Compound" class="h-[20px] opacity-70">
+          <img src="images/aave-logo.svg" alt="Aave" class="h-[12px] opacity-70">
+        </div>
+      </div>
+    </div>
+    <!-- Right headline — baseline aligned with cap-line of 14.89% on left -->
+    <div class="hero-reveal" style="position:absolute;left:522px;top:642px;width:680px;">
+      <p class="font-knapp font-medium text-[44px] leading-[1.1] tracking-[-0.44px] text-grey-600">Industry-leading rates, brought to you by DeFi.</p>
+    </div>
+    <!-- Right body copy -->
+    <div class="hero-reveal" style="position:absolute;left:522px;top:758px;width:680px;">
+      <p class="font-knapp font-medium text-[20px] leading-[1.3] tracking-[-0.2px] text-grey-800">Earn interest every second with industry-leading rates, powered by open markets and secured by public blockchains.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 2: REAL-TIME COMPOUNDING (779px) ===== -->
+<section class="relative w-full bg-light" style="height:779px;">
+  <div class="absolute" style="left:32px;right:32px;top:0;bottom:0;">
+    <div class="gl" style="left:0"></div><div class="gl" style="left:458px"></div><div class="gl" style="right:0"></div>
+  </div>
+  <!-- Icon at (64,84) w:44 h:44 -->
+  <div class="absolute w-[44px] h-[44px] rounded-full flex items-center justify-center" style="left:64px;top:84px;">
+    <img src="images/action-icon.svg" alt="" class="w-[44px] h-[44px]">
+  </div>
+  <!-- Heading at (64,80) w:340 — text-indent pushes past icon -->
+  <h2 class="sh absolute reveal" style="left:64px;top:80px;width:340px;text-indent:56px;">Real-time compounding.</h2>
+  <!-- Body at (522,89) w:680 -->
+  <p class="font-knapp font-medium text-[20px] leading-[1.3] tracking-[-0.2px] text-grey-800 absolute reveal" style="left:522px;top:89px;width:680px;">No lockups. No fund holds. No TradFi funny business. Just yield that compounds continuously and transparently — in real time — while powering the internet of value's most liquid over-collateralized lending markets.</p>
+  <!-- Visual frame at (510,207) w:878 h:492 — video replacing phone mockup -->
+  <div class="absolute reveal" style="left:510px;top:207px;width:878px;height:492px;">
+    <img src="images/corner-tl.svg" alt="" class="absolute" style="top:4px;left:16px;width:12px;height:12px;">
+    <img src="images/corner-tl.svg" alt="" class="absolute" style="top:4px;right:4px;width:12px;height:12px;transform:scaleX(-1);">
+    <img src="images/corner-tl.svg" alt="" class="absolute" style="bottom:4px;left:16px;width:12px;height:12px;transform:scaleY(-1);">
+    <img src="images/corner-tl.svg" alt="" class="absolute" style="bottom:4px;right:4px;width:12px;height:12px;transform:scale(-1);">
+    <div class="absolute card-visual rounded-[28px] overflow-hidden" style="left:12px;top:12px;right:12px;bottom:12px;background:#ededed;">
+      <video autoplay muted loop playsinline class="w-full h-full object-cover">
+        <source src="images/earn-video.mp4" type="video/mp4">
+        <source src="images/earn-video.mov" type="video/quicktime">
+      </video>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 3: CAPTURE THE YIELD (926px) ===== -->
+<section class="relative w-full bg-light" style="height:926px;">
+  <div class="absolute" style="left:32px;right:32px;top:0;bottom:0;">
+    <div class="gl" style="left:0"></div><div class="gl" style="left:458px"></div><div class="gl" style="right:0"></div>
+  </div>
+  <!-- Heading container at (32, 80) w:458 h:96 — decorator inside -->
+  <div class="absolute reveal" style="left:32px;top:80px;width:458px;height:96px;">
+    <span class="slabel text-grey-800 absolute" style="left:0;top:8px;">Rates</span>
+    <h2 class="sh" style="padding-left:32px;text-indent:40px;">Capture the yield you deserve.</h2>
+  </div>
+  <!-- Body at (520, 80) w:680 -->
+  <div class="absolute reveal" style="left:520px;top:80px;width:680px;">
+    <p class="font-knapp font-medium text-[20px] leading-[1.3] tracking-[-0.2px] text-grey-800">Banks make money by lending out your savings and only sharing a fraction of the interest with you. With DeFi, there's no middleman to take a cut, so you capture what borrowers pay.</p>
+    <p class="font-knapp font-medium text-[20px] leading-[1.3] tracking-[-0.2px] text-grey-800 mt-4">And because onchain lending markets are always transparent and verifiable, you can rest assured that your funds are there to be withdrawn anytime.</p>
+  </div>
+  <!-- Chart at (490, 302) w:878 — bar widths: 704, 552, 484, 99 -->
+  <div class="absolute" style="left:490px;top:302px;width:878px;">
+    <div class="flex items-center gap-5 bar-row" data-width="704" data-delay="0" style="margin-bottom:22px;">
+      <div class="bar-fill bar-fill-green h-[120px]" style="width:0px"></div>
+      <div class="shrink-0 bar-label" style="opacity:0"><p class="font-knapp font-medium text-[44px] tracking-[-0.44px] text-green leading-none">7.63%</p><p class="font-mono text-[11px] tracking-[0.66px] uppercase text-grey-700 mt-2">Morpho · World Chain</p></div>
+    </div>
+    <div class="flex items-center gap-5 bar-row" data-width="552" data-delay="0.15" style="margin-bottom:22px;">
+      <div class="bar-fill bar-fill-grey h-[120px]" style="width:0px"></div>
+      <div class="shrink-0 bar-label" style="opacity:0"><p class="font-knapp font-medium text-[44px] tracking-[-0.44px] text-grey-700 leading-none">5.00%</p><p class="font-mono text-[11px] tracking-[0.66px] uppercase text-grey-700 mt-2">AAVE App · Base APY</p></div>
+    </div>
+    <div class="flex items-center gap-5 bar-row" data-width="484" data-delay="0.3" style="margin-bottom:22px;">
+      <div class="bar-fill bar-fill-grey h-[120px]" style="width:0px"></div>
+      <div class="shrink-0 bar-label" style="opacity:0"><p class="font-knapp font-medium text-[44px] tracking-[-0.44px] text-grey-700 leading-none">4.10%</p><p class="font-mono text-[11px] tracking-[0.66px] uppercase text-grey-700 mt-2">US 1 Year T-Bill</p></div>
+    </div>
+    <div class="flex items-center gap-5 bar-row" data-width="99" data-delay="0.45">
+      <div class="bar-fill bar-fill-grey h-[120px]" style="width:0px"></div>
+      <div class="shrink-0 bar-label" style="opacity:0"><p class="font-knapp font-medium text-[44px] tracking-[-0.44px] text-grey-700 leading-none">0.40%</p><p class="font-mono text-[11px] tracking-[0.66px] uppercase text-grey-700 mt-2">Avg Bank Savings Account</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 4: FEATURES (1700px) ===== -->
+<section class="relative w-full bg-light" style="height:1700px;">
+  <div class="absolute" style="left:32px;right:32px;top:0;bottom:0;">
+    <div class="gl" style="left:0"></div><div class="gl" style="left:458px"></div><div class="gl" style="right:0"></div>
+  </div>
+  <!-- Heading container at (32, 80) w:458 h:96 -->
+  <div class="absolute reveal" style="left:32px;top:80px;width:458px;height:96px;">
+    <span class="slabel text-grey-800 absolute" style="left:0;top:8px;">Features</span>
+    <h2 class="sh" style="padding-left:32px;text-indent:65px;">The best way to earn onchain.</h2>
+  </div>
+  <!-- Small decorator at (487, 160) -->
+  <span class="slabel text-grey-700 absolute" style="left:487px;top:160px;">&nbsp;</span>
+  <!-- Large body at (522, 80) w:767 — 40px font, grey-600 -->
+  <p class="font-knapp font-medium text-[40px] leading-[1.15] tracking-[-0.4px] text-grey-600 absolute reveal" style="left:522px;top:80px;width:767px;">Legend makes earning with DeFi easy. Just add funds, supply them to a market, and watch the yield pile up. Withdraw anytime to access your savings whenever you need.</p>
+
+  <!-- Card 1 at (490, 400) w:464 h:610 -->
+  <div class="absolute reveal" style="left:490px;top:400px;width:464px;height:610px;">
+    <div class="relative" style="margin:16px 20px 0;width:424px;height:414px;">
+      <img src="images/corner-tl.svg" alt="" class="absolute" style="top:4px;left:16px;width:12px;height:12px;">
+      <img src="images/corner-tl.svg" alt="" class="absolute" style="top:4px;right:4px;width:12px;height:12px;transform:scaleX(-1);">
+      <img src="images/corner-tl.svg" alt="" class="absolute" style="bottom:4px;left:16px;width:12px;height:12px;transform:scaleY(-1);">
+      <img src="images/corner-tl.svg" alt="" class="absolute" style="bottom:4px;right:4px;width:12px;height:12px;transform:scale(-1);">
+      <div class="absolute card-visual rounded-[28px] overflow-hidden" style="left:17px;top:12px;right:17px;bottom:12px;"><img src="images/spot01.png" alt="" class="w-full h-full object-cover"></div>
+    </div>
+    <div class="absolute" style="left:0;top:452px;"><span class="slabel text-grey-700">01</span></div>
+    <div class="absolute" style="left:20px;top:446px;width:424px;">
+      <h3 class="font-knapp font-medium text-[22px] leading-[1.3] tracking-[-0.22px] text-dark" style="text-indent:56px;">Easily add funds from anywhere.</h3>
+      <p class="font-knapp text-[16px] leading-[1.5] tracking-[0.32px] text-grey-800 mt-[41px]">Transfer USD directly from your bank account as USDC, or receive assets onchain from another wallet or exchange account.</p>
+    </div>
+  </div>
+
+  <!-- Card 2 at (954, 400) w:454 h:610 -->
+  <div class="absolute reveal" style="left:954px;top:400px;width:454px;height:610px;">
+    <div class="relative" style="margin:16px 20px 0;width:414px;height:414px;">
+      <img src="images/corner-tl.svg" alt="" class="absolute" style="top:4px;left:16px;width:12px;height:12px;">
+      <img src="images/corner-tl.svg" alt="" class="absolute" style="top:4px;right:4px;width:12px;height:12px;transform:scaleX(-1);">
+      <img src="images/corner-tl.svg" alt="" class="absolute" style="bottom:4px;left:16px;width:12px;height:12px;transform:scaleY(-1);">
+      <img src="images/corner-tl.svg" alt="" class="absolute" style="bottom:4px;right:4px;width:12px;height:12px;transform:scale(-1);">
+      <div class="absolute card-visual rounded-[28px] overflow-hidden" style="left:12px;top:12px;right:12px;bottom:12px;"><img src="images/spot02.png" alt="" class="w-full h-full object-cover"></div>
+    </div>
+    <div class="absolute" style="left:0;top:452px;"><span class="slabel text-grey-700">02</span></div>
+    <div class="absolute" style="left:20px;top:446px;width:414px;">
+      <h3 class="font-knapp font-medium text-[22px] leading-[1.3] tracking-[-0.22px] text-dark" style="text-indent:56px;">The best rate is only ever two taps away.</h3>
+      <p class="font-knapp text-[16px] leading-[1.5] tracking-[0.32px] text-grey-800 mt-[41px]">Legend makes it easy to migrate balances between protocols and networks so you're always maximizing your earning potential.</p>
+    </div>
+  </div>
+
+  <!-- Card 3 at (490, 1010) w:464 h:610 -->
+  <div class="absolute reveal" style="left:490px;top:1010px;width:464px;height:610px;">
+    <div class="relative" style="margin:16px 20px 0;width:424px;height:414px;">
+      <img src="images/corner-tl.svg" alt="" class="absolute" style="top:4px;left:16px;width:12px;height:12px;">
+      <img src="images/corner-tl.svg" alt="" class="absolute" style="top:4px;right:4px;width:12px;height:12px;transform:scaleX(-1);">
+      <img src="images/corner-tl.svg" alt="" class="absolute" style="bottom:4px;left:16px;width:12px;height:12px;transform:scaleY(-1);">
+      <img src="images/corner-tl.svg" alt="" class="absolute" style="bottom:4px;right:4px;width:12px;height:12px;transform:scale(-1);">
+      <div class="absolute card-visual rounded-[28px] overflow-hidden" style="left:17px;top:12px;right:17px;bottom:12px;"><img src="images/spot03.png" alt="" class="w-full h-full object-cover"></div>
+    </div>
+    <div class="absolute" style="left:0;top:452px;"><span class="slabel text-grey-700">03</span></div>
+    <div class="absolute" style="left:20px;top:446px;width:424px;">
+      <h3 class="font-knapp font-medium text-[22px] leading-[1.3] tracking-[-0.22px] text-dark" style="text-indent:56px;">Trade with your earning balances.</h3>
+      <p class="font-knapp text-[16px] leading-[1.5] tracking-[0.32px] text-grey-800 mt-[41px]">Balances can be earning right up until the moment you use them to trade, so you never miss out on a single block of compounding.</p>
+    </div>
+  </div>
+
+  <!-- Card 4 at (954, 1010) w:454 h:610 -->
+  <div class="absolute reveal" style="left:954px;top:1010px;width:454px;height:610px;">
+    <div class="relative" style="margin:16px 20px 0;width:414px;height:414px;">
+      <img src="images/corner-tl.svg" alt="" class="absolute" style="top:4px;left:16px;width:12px;height:12px;">
+      <img src="images/corner-tl.svg" alt="" class="absolute" style="top:4px;right:4px;width:12px;height:12px;transform:scaleX(-1);">
+      <img src="images/corner-tl.svg" alt="" class="absolute" style="bottom:4px;left:16px;width:12px;height:12px;transform:scaleY(-1);">
+      <img src="images/corner-tl.svg" alt="" class="absolute" style="bottom:4px;right:4px;width:12px;height:12px;transform:scale(-1);">
+      <div class="absolute card-visual rounded-[28px] overflow-hidden" style="left:12px;top:12px;right:12px;bottom:12px;"><img src="images/spot04.png" alt="" class="w-full h-full object-cover"></div>
+    </div>
+    <div class="absolute" style="left:0;top:452px;"><span class="slabel text-grey-700">04</span></div>
+    <div class="absolute" style="left:20px;top:446px;width:414px;">
+      <h3 class="font-knapp font-medium text-[22px] leading-[1.3] tracking-[-0.22px] text-dark" style="text-indent:56px;">Automatically compound your rewards.</h3>
+      <p class="font-knapp text-[16px] leading-[1.5] tracking-[0.32px] text-grey-800 mt-[11px]">With Legend, "net APR" becomes your real APR. Eliminate price risk and opportunity cost by automatically re-investing your unclaimed rewards.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 5: REAL MARKETS (920px) ===== -->
+<section class="relative w-full bg-light" style="height:920px;">
+  <div class="absolute" style="left:32px;right:32px;top:0;bottom:0;">
+    <div class="gl" style="left:0"></div><div class="gl" style="left:458px"></div><div class="gl" style="right:0"></div>
+  </div>
+  <!-- Heading container at (32, 72) w:458 h:96 -->
+  <div class="absolute reveal" style="left:32px;top:72px;width:458px;height:96px;">
+    <span class="slabel text-grey-800 absolute" style="left:0;top:8px;">Markets</span>
+    <h2 class="sh" style="padding-left:32px;text-indent:60px;">Real markets, real yield.</h2>
+  </div>
+  <div class="absolute reveal" style="left:522px;top:76px;width:680px;">
+    <p class="font-knapp font-medium text-[20px] leading-[1.3] tracking-[-0.2px] text-grey-800">Legend integrates only the safest, most trusted DeFi protocols, markets, and vaults across supported blockchains.</p>
+    <p class="font-knapp text-[16px] leading-[1.5] tracking-[0.32px] text-grey-700 mt-3">Rates shown below are variable and fluctuate continuously based on utilization.</p>
+  </div>
+  <!-- Stats at y:208 -->
+  <div class="absolute reveal" style="left:522px;top:208px;width:191px;">
+    <p class="font-knapp font-medium text-[44px] tracking-[-0.44px] text-text-1 leading-none counter" data-target="33">0</p>
+    <p class="font-mono text-[11px] tracking-[0.66px] uppercase text-grey-700 mt-2">Total Markets</p>
+  </div>
+  <div class="absolute reveal" style="left:752px;top:208px;width:191px;">
+    <p class="font-knapp font-medium text-[44px] tracking-[-0.44px] text-text-1 leading-none counter" data-target="7">0</p>
+    <p class="font-mono text-[11px] tracking-[0.66px] uppercase text-grey-700 mt-2">Earnable Assets</p>
+  </div>
+  <div class="absolute reveal" style="left:981px;top:208px;width:191px;">
+    <p class="font-knapp font-medium text-[44px] tracking-[-0.44px] text-text-1 leading-none counter-dollar" data-target="29.7">$0</p>
+    <p class="font-mono text-[11px] tracking-[0.66px] uppercase text-grey-700 mt-2">Total Liquidity</p>
+  </div>
+  <!-- Filters at (522, 354) -->
+  <div class="absolute flex items-center gap-3 reveal" style="left:522px;top:354px;">
+    <button class="asset-filter font-mono text-[13px] tracking-[0.78px] uppercase text-text-1 pb-1 border-b border-dark">All</button>
+    <button class="asset-filter font-mono text-[13px] tracking-[0.78px] uppercase text-grey-700 pb-1 border-b border-transparent hover:text-text-1 transition-colors">USDC</button>
+    <button class="asset-filter font-mono text-[13px] tracking-[0.78px] uppercase text-grey-700 pb-1 border-b border-transparent hover:text-text-1 transition-colors">Eth</button>
+    <button class="asset-filter font-mono text-[13px] tracking-[0.78px] uppercase text-grey-700 pb-1 border-b border-transparent hover:text-text-1 transition-colors">USDH</button>
+    <button class="asset-filter font-mono text-[13px] tracking-[0.78px] uppercase text-grey-700 pb-1 border-b border-transparent hover:text-text-1 transition-colors">USDT</button>
+    <button class="asset-filter font-mono text-[13px] tracking-[0.78px] uppercase text-grey-700 pb-1 border-b border-transparent hover:text-text-1 transition-colors">WLD</button>
+    <button class="asset-filter font-mono text-[13px] tracking-[0.78px] uppercase text-grey-700 pb-1 border-b border-transparent hover:text-text-1 transition-colors">WBTC</button>
+  </div>
+  <!-- Arrows at (1281, 354) -->
+  <div class="absolute flex items-center gap-3" style="left:1281px;top:354px;">
+    <button class="text-grey-700 hover:text-text-1 transition-colors"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" class="w-4 h-4"><path d="M10 3L5 8l5 5"/></svg></button>
+    <span class="font-mono text-[13px] tracking-[0.78px] text-grey-800">1 of 4</span>
+    <button class="text-grey-700 hover:text-text-1 transition-colors"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" class="w-4 h-4"><path d="M6 3l5 5-5 5"/></svg></button>
+  </div>
+  <!-- Market grid at (490, 390) w:918 h:458 — 4 cols × 2 rows, each cell 230×229 -->
+  <div class="absolute grid grid-cols-4 reveal" style="left:490px;top:390px;width:918px;">
+    <div class="market-card border-b border-r border-dashed border-border p-8 cursor-pointer" style="width:230px;height:229px;">
+      <img src="images/usdc-morpho.png" alt="" class="w-10 h-10 mb-[45px]">
+      <p class="font-mono text-[13px] tracking-[0.78px] uppercase text-text-1 mb-0.5">USDC</p>
+      <p class="font-knapp font-medium text-[32px] tracking-[-0.6px] text-text-1 leading-none">7.23%</p>
+      <p class="font-mono text-[11px] tracking-[0.66px] uppercase text-grey-700 mt-1">Morpho · World Chain</p>
+    </div>
+    <div class="market-card border-b border-r border-dashed border-border p-8 cursor-pointer" style="width:229px;height:229px;">
+      <img src="images/eth-compound.png" alt="" class="w-10 h-10 mb-[45px]">
+      <p class="font-mono text-[13px] tracking-[0.78px] uppercase text-text-1 mb-0.5">ETH</p>
+      <p class="font-knapp font-medium text-[32px] tracking-[-0.6px] text-text-1 leading-none">4.94%</p>
+      <p class="font-mono text-[11px] tracking-[0.66px] uppercase text-grey-700 mt-1">Compound · Arbitrum</p>
+    </div>
+    <div class="market-card border-b border-r border-dashed border-border p-8 cursor-pointer" style="width:229px;height:229px;">
+      <img src="images/eth-morpho.png" alt="" class="w-10 h-10 mb-[45px]">
+      <p class="font-mono text-[13px] tracking-[0.78px] uppercase text-text-1 mb-0.5">ETH</p>
+      <p class="font-knapp font-medium text-[32px] tracking-[-0.6px] text-text-1 leading-none">4.60%</p>
+      <p class="font-mono text-[11px] tracking-[0.66px] uppercase text-grey-700 mt-1">Morpho · World Chain</p>
+    </div>
+    <div class="market-card border-b border-dashed border-border p-8 cursor-pointer" style="width:230px;height:229px;">
+      <img src="images/usdc-morpho.png" alt="" class="w-10 h-10 mb-[45px]">
+      <p class="font-mono text-[13px] tracking-[0.78px] uppercase text-text-1 mb-0.5">USDC</p>
+      <p class="font-knapp font-medium text-[32px] tracking-[-0.6px] text-text-1 leading-none">4.38%</p>
+      <p class="font-mono text-[11px] tracking-[0.66px] uppercase text-grey-700 mt-1">Morpho · HyperEVM</p>
+    </div>
+    <div class="market-card border-r border-dashed border-border p-8 cursor-pointer" style="width:230px;height:229px;">
+      <img src="images/usdh-hyperevm.png" alt="" class="w-10 h-10 mb-[45px]">
+      <p class="font-mono text-[13px] tracking-[0.78px] uppercase text-text-1 mb-0.5">USDH</p>
+      <p class="font-knapp font-medium text-[32px] tracking-[-0.6px] text-text-1 leading-none">4.22%</p>
+      <p class="font-mono text-[11px] tracking-[0.66px] uppercase text-grey-700 mt-1">Morpho · HyperEVM</p>
+    </div>
+    <div class="market-card border-r border-dashed border-border p-8 cursor-pointer" style="width:229px;height:229px;">
+      <img src="images/usdt-optomosm.png" alt="" class="w-10 h-10 mb-[45px]">
+      <p class="font-mono text-[13px] tracking-[0.78px] uppercase text-text-1 mb-0.5">USDT</p>
+      <p class="font-knapp font-medium text-[32px] tracking-[-0.6px] text-text-1 leading-none">3.44%</p>
+      <p class="font-mono text-[11px] tracking-[0.66px] uppercase text-grey-700 mt-1">Compound · Optimism</p>
+    </div>
+    <div class="market-card border-r border-dashed border-border p-8 cursor-pointer" style="width:229px;height:229px;">
+      <img src="images/usdc-aave.png" alt="" class="w-10 h-10 mb-[45px]">
+      <p class="font-mono text-[13px] tracking-[0.78px] uppercase text-text-1 mb-0.5">USDC</p>
+      <p class="font-knapp font-medium text-[32px] tracking-[-0.6px] text-text-1 leading-none">3.39%</p>
+      <p class="font-mono text-[11px] tracking-[0.66px] uppercase text-grey-700 mt-1">Aave · Base</p>
+    </div>
+    <div class="market-card p-8 cursor-pointer" style="width:230px;height:229px;">
+      <img src="images/usdc-morpho.png" alt="" class="w-10 h-10 mb-[45px]">
+      <p class="font-mono text-[13px] tracking-[0.78px] uppercase text-text-1 mb-0.5">USDC</p>
+      <p class="font-knapp font-medium text-[32px] tracking-[-0.6px] text-text-1 leading-none">3.19%</p>
+      <p class="font-mono text-[11px] tracking-[0.66px] uppercase text-grey-700 mt-1">Compound · Base</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 6: COMPARISON (920px) ===== -->
+<section class="relative w-full bg-light overflow-hidden" style="height:920px;border-radius:0 0 40px 40px;">
+  <div class="absolute" style="left:32px;right:32px;top:0;bottom:0;">
+    <div class="gl" style="left:0"></div><div class="gl" style="left:458px"></div><div class="gl" style="right:0"></div>
+  </div>
+  <!-- Vertical divider at x:455, from y:40 to y:429 -->
+  <div class="absolute" style="left:455px;top:40px;width:1px;height:389px;background:repeating-linear-gradient(to bottom,rgba(19,19,19,0.08) 0px,rgba(19,19,19,0.08) 4px,transparent 4px,transparent 8px);"></div>
+  <!-- Heading container at (32, 64) w:458 h:96 -->
+  <div class="absolute reveal" style="left:32px;top:64px;width:458px;height:96px;">
+    <span class="slabel text-grey-800 absolute" style="left:0;top:8px;">Comparison</span>
+    <h2 class="sh" style="padding-left:32px;text-indent:85px;">How Legend stacks up.</h2>
+  </div>
+  <!-- Body at (490, 73) — note Figma says 490+32=522 relative to section, 9px from top of copy frame -->
+  <p class="font-knapp font-medium text-[20px] leading-[1.3] tracking-[-0.2px] text-grey-800 absolute reveal" style="left:522px;top:73px;width:680px;">We're not the only high-yield savings option out there, but for savers who want competitive rates, maximum flexibility, and peace of mind — Legend is pretty hard to beat.</p>
+  <!-- Table at (32, 256) w:1376 -->
+  <div class="absolute reveal" style="left:32px;top:256px;width:1376px;">
+    <!-- Vertical dashed line inside table at x:458 from table left -->
+    <div class="absolute" style="left:458px;top:0;bottom:0;width:1px;background:repeating-linear-gradient(to bottom,rgba(19,19,19,0.08) 0px,rgba(19,19,19,0.08) 4px,transparent 4px,transparent 8px);"></div>
+    <!-- Header row h:79 — Figma: label at (32,32), data at (490,32) from table frame -->
+    <div class="flex items-stretch border-b border-dashed border-border" style="height:79px;">
+      <div class="flex items-center shrink-0" style="width:490px;padding-left:32px;"><p class="font-mono text-[11px] tracking-[0.66px] uppercase text-grey-800">Feature</p></div>
+      <div class="grid items-center" style="grid-template-columns:repeat(6, 1fr);width:854px;">
+        <p class="font-mono text-[11px] tracking-[0.66px] uppercase text-grey-800">Legend</p>
+        <p class="font-mono text-[11px] tracking-[0.66px] uppercase text-grey-800">Aave</p>
+        <p class="font-mono text-[11px] tracking-[0.66px] uppercase text-grey-800">Nook</p>
+        <p class="font-mono text-[11px] tracking-[0.66px] uppercase text-grey-800">Coinbase Lend</p>
+        <p class="font-mono text-[11px] tracking-[0.66px] uppercase text-grey-800">Robinhood Gold</p>
+        <p class="font-mono text-[11px] tracking-[0.66px] uppercase text-grey-800">HYSAs</p>
+      </div>
+    </div>
+    <!-- APR row -->
+    <div class="comparison-row flex items-stretch border-b border-dashed border-border" style="height:84px;">
+      <div class="flex items-center shrink-0" style="width:490px;padding-left:32px;"><p class="font-knapp font-medium text-[20px] tracking-[-0.6px] text-text-1">APR</p></div>
+      <div class="grid items-center text-[20px] tracking-[-0.6px]" style="grid-template-columns:repeat(6, 1fr);width:854px;">
+        <p class="font-knapp font-medium text-text-1">up to 14.89%</p>
+        <p class="font-knapp text-text-2">up to 9.00%</p>
+        <p class="font-knapp text-text-2">7.60%</p>
+        <p class="font-knapp text-text-2">up to 4.20%</p>
+        <p class="font-knapp text-text-2">3.35%</p>
+        <p class="font-knapp text-text-2">up to 4.00%</p>
+      </div>
+    </div>
+    <!-- Compounding row -->
+    <div class="comparison-row flex items-stretch border-b border-dashed border-border" style="height:84px;">
+      <div class="flex items-center shrink-0" style="width:490px;padding-left:32px;"><p class="font-knapp font-medium text-[20px] tracking-[-0.6px] text-text-1">Compounding</p></div>
+      <div class="grid items-center text-[20px] tracking-[-0.6px]" style="grid-template-columns:repeat(6, 1fr);width:854px;">
+        <p class="font-knapp font-medium text-text-1">Real-time</p>
+        <p class="font-knapp text-text-2">Real-time</p>
+        <p class="font-knapp text-text-2">Real-time</p>
+        <p class="font-knapp text-text-2">Real-time</p>
+        <p class="font-knapp text-text-2">Daily</p>
+        <p class="font-knapp text-text-2">Monthly</p>
+      </div>
+    </div>
+    <!-- Minimum deposit row -->
+    <div class="comparison-row flex items-stretch border-b border-dashed border-border" style="height:84px;">
+      <div class="flex items-center shrink-0" style="width:490px;padding-left:32px;"><p class="font-knapp font-medium text-[20px] tracking-[-0.6px] text-text-1">Minimum deposit</p></div>
+      <div class="grid items-center text-[20px] tracking-[-0.6px]" style="grid-template-columns:repeat(6, 1fr);width:854px;">
+        <p class="font-knapp font-medium text-text-1">None</p>
+        <p class="font-knapp text-text-3">FPO</p>
+        <p class="font-knapp text-text-3">FPO</p>
+        <p class="font-knapp text-text-3">FPO</p>
+        <p class="font-knapp text-text-3">FPO</p>
+        <p class="font-knapp text-text-3">FPO</p>
+      </div>
+    </div>
+    <!-- Withdrawal timeline row -->
+    <div class="comparison-row flex items-stretch border-b border-dashed border-border" style="height:84px;">
+      <div class="flex items-center shrink-0" style="width:490px;padding-left:32px;"><p class="font-knapp font-medium text-[20px] tracking-[-0.6px] text-text-1">Withdrawal timeline</p></div>
+      <div class="grid items-center text-[20px] tracking-[-0.6px]" style="grid-template-columns:repeat(6, 1fr);width:854px;">
+        <p class="font-knapp font-medium text-text-1">FPO</p>
+        <p class="font-knapp text-text-3">FPO</p>
+        <p class="font-knapp text-text-3">FPO</p>
+        <p class="font-knapp text-text-3">FPO</p>
+        <p class="font-knapp text-text-3">FPO</p>
+        <p class="font-knapp text-text-3">FPO</p>
+      </div>
+    </div>
+    <!-- Lockups row -->
+    <div class="comparison-row flex items-stretch border-b border-dashed border-border" style="height:84px;">
+      <div class="flex items-center shrink-0" style="width:490px;padding-left:32px;"><p class="font-knapp font-medium text-[20px] tracking-[-0.6px] text-text-1">Lockups</p></div>
+      <div class="grid items-center text-[20px] tracking-[-0.6px]" style="grid-template-columns:repeat(6, 1fr);width:854px;">
+        <p class="font-knapp font-medium text-text-1">FPO</p>
+        <p class="font-knapp text-text-3">FPO</p>
+        <p class="font-knapp text-text-3">FPO</p>
+        <p class="font-knapp text-text-3">FPO</p>
+        <p class="font-knapp text-text-3">FPO</p>
+        <p class="font-knapp text-text-3">FPO</p>
+      </div>
+    </div>
+    <!-- Monthly fees row -->
+    <div class="comparison-row flex items-stretch border-b border-dashed border-border" style="height:84px;">
+      <div class="flex items-center shrink-0" style="width:490px;padding-left:32px;"><p class="font-knapp font-medium text-[20px] tracking-[-0.6px] text-text-1">Monthly fees</p></div>
+      <div class="grid items-center text-[20px] tracking-[-0.6px]" style="grid-template-columns:repeat(6, 1fr);width:854px;">
+        <p class="font-knapp font-medium text-text-1">FPO</p>
+        <p class="font-knapp text-text-3">FPO</p>
+        <p class="font-knapp text-text-3">FPO</p>
+        <p class="font-knapp text-text-3">FPO</p>
+        <p class="font-knapp text-text-2">$5/mo</p>
+        <p class="font-knapp text-text-3">FPO</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 7: FAQ (dark) ===== -->
+<section class="relative w-full bg-dark" style="padding-top:160px;padding-bottom:160px;">
+  <div class="absolute" style="left:32px;right:32px;top:0;bottom:0;">
+    <div class="gl gl-dk" style="left:0"></div>
+    <div class="gl gl-dk" style="left:455px"></div>
+    <div class="gl gl-dk" style="left:921px"></div>
+    <div class="gl gl-dk" style="right:0"></div>
+  </div>
+  <div class="relative" style="margin:0 auto;max-width:1440px;">
+    <!-- Heading container at (32, 0) w:455 h:96 -->
+    <div class="absolute reveal" style="left:32px;top:0;width:455px;height:96px;">
+      <span class="slabel slabel-dk text-grey-700 absolute" style="left:0;top:8px;">FAQ</span>
+      <h2 class="sh" style="padding-left:32px;text-indent:25px;color:#ededed;">You asked, we answered.</h2>
+    </div>
+    <!-- Questions at (487, 0) w:921 -->
+    <div class="reveal" style="margin-left:487px;width:921px;">
+      <div class="faq-item open border-b border-dashed border-white/10">
+        <button class="faq-trigger w-full flex items-center justify-between py-8 text-left group">
+          <div class="flex items-center gap-4"><span class="font-mono text-[11px] tracking-[0.66px] uppercase text-grey-700">01</span><span class="font-knapp font-medium text-[20px] tracking-[-0.2px] text-[#ededed] group-hover:text-white transition-colors">Aren't rates above 5.00% APR too good to be true?</span></div>
+          <span class="faq-toggle w-6 h-6 flex items-center justify-center text-grey-700 shrink-0"><svg class="w-4 h-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="8" y1="3" x2="8" y2="13"/><line x1="3" y1="8" x2="13" y2="8"/></svg></span>
+        </button>
+        <div class="faq-answer pl-[38px]"><p class="font-knapp text-[16px] leading-[1.5] tracking-[0.32px] text-grey-700 max-w-[680px]">Not at all! Base rates in DeFi — the rate borrowers pay, minus protocol reserves — are often enhanced with additional rewards paid in other tokens. You can either hold those tokens if you think their price will appreciate, or quickly and easily convert them back to USDC (or whatever asset you want to earn) to maximize compounding.</p></div>
+      </div>
+      <div class="faq-item border-b border-dashed border-white/10">
+        <button class="faq-trigger w-full flex items-center justify-between py-8 text-left group">
+          <div class="flex items-center gap-4"><span class="font-mono text-[11px] tracking-[0.66px] uppercase text-grey-700">02</span><span class="font-knapp font-medium text-[20px] tracking-[-0.2px] text-[#ededed] group-hover:text-white transition-colors">Where does the yield come from?</span></div>
+          <span class="faq-toggle w-6 h-6 flex items-center justify-center text-grey-700 shrink-0"><svg class="w-4 h-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="8" y1="3" x2="8" y2="13"/><line x1="3" y1="8" x2="13" y2="8"/></svg></span>
+        </button>
+        <div class="faq-answer pl-[38px]"><p class="font-knapp text-[16px] leading-[1.5] tracking-[0.32px] text-grey-700 max-w-[680px]">Yield comes from borrowers who pay interest to access liquidity. When you supply assets to a lending market, borrowers pay a variable rate that fluctuates based on supply and demand. That interest flows directly to you as a supplier.</p></div>
+      </div>
+      <div class="faq-item border-b border-dashed border-white/10">
+        <button class="faq-trigger w-full flex items-center justify-between py-8 text-left group">
+          <div class="flex items-center gap-4"><span class="font-mono text-[11px] tracking-[0.66px] uppercase text-grey-700">03</span><span class="font-knapp font-medium text-[20px] tracking-[-0.2px] text-[#ededed] group-hover:text-white transition-colors">I saw different rates yesterday. Why the change?</span></div>
+          <span class="faq-toggle w-6 h-6 flex items-center justify-center text-grey-700 shrink-0"><svg class="w-4 h-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="8" y1="3" x2="8" y2="13"/><line x1="3" y1="8" x2="13" y2="8"/></svg></span>
+        </button>
+        <div class="faq-answer pl-[38px]"><p class="font-knapp text-[16px] leading-[1.5] tracking-[0.32px] text-grey-700 max-w-[680px]">DeFi lending rates are variable and change continuously based on market utilization. When demand to borrow increases, rates go up. When it decreases, rates go down. This is normal and transparent — you can always see the current rate in real time.</p></div>
+      </div>
+      <div class="faq-item border-b border-dashed border-white/10">
+        <button class="faq-trigger w-full flex items-center justify-between py-8 text-left group">
+          <div class="flex items-center gap-4"><span class="font-mono text-[11px] tracking-[0.66px] uppercase text-grey-700">04</span><span class="font-knapp font-medium text-[20px] tracking-[-0.2px] text-[#ededed] group-hover:text-white transition-colors">Are my earning balances in Legend insured?</span></div>
+          <span class="faq-toggle w-6 h-6 flex items-center justify-center text-grey-700 shrink-0"><svg class="w-4 h-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="8" y1="3" x2="8" y2="13"/><line x1="3" y1="8" x2="13" y2="8"/></svg></span>
+        </button>
+        <div class="faq-answer pl-[38px]"><p class="font-knapp text-[16px] leading-[1.5] tracking-[0.32px] text-grey-700 max-w-[680px]">DeFi protocols are not FDIC-insured, but they are secured by smart contracts that have been extensively audited by leading security firms. Protocols like Aave also maintain safety modules and bug bounty programs as additional layers of protection.</p></div>
+      </div>
+      <div class="faq-item border-b border-dashed border-white/10">
+        <button class="faq-trigger w-full flex items-center justify-between py-8 text-left group">
+          <div class="flex items-center gap-4"><span class="font-mono text-[11px] tracking-[0.66px] uppercase text-grey-700">05</span><span class="font-knapp font-medium text-[20px] tracking-[-0.2px] text-[#ededed] group-hover:text-white transition-colors">What's the minimum deposit required?</span></div>
+          <span class="faq-toggle w-6 h-6 flex items-center justify-center text-grey-700 shrink-0"><svg class="w-4 h-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="8" y1="3" x2="8" y2="13"/><line x1="3" y1="8" x2="13" y2="8"/></svg></span>
+        </button>
+        <div class="faq-answer pl-[38px]"><p class="font-knapp text-[16px] leading-[1.5] tracking-[0.32px] text-grey-700 max-w-[680px]">There is no minimum deposit required. You can start earning with any amount.</p></div>
+      </div>
+      <div class="faq-item border-b border-dashed border-white/10">
+        <button class="faq-trigger w-full flex items-center justify-between py-8 text-left group">
+          <div class="flex items-center gap-4"><span class="font-mono text-[11px] tracking-[0.66px] uppercase text-grey-700">06</span><span class="font-knapp font-medium text-[20px] tracking-[-0.2px] text-[#ededed] group-hover:text-white transition-colors">How do I get my money out of Legend?</span></div>
+          <span class="faq-toggle w-6 h-6 flex items-center justify-center text-grey-700 shrink-0"><svg class="w-4 h-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="8" y1="3" x2="8" y2="13"/><line x1="3" y1="8" x2="13" y2="8"/></svg></span>
+        </button>
+        <div class="faq-answer pl-[38px]"><p class="font-knapp text-[16px] leading-[1.5] tracking-[0.32px] text-grey-700 max-w-[680px]">Withdraw anytime. Your funds are never locked. Simply tap withdraw in the app and your assets will be available to transfer or spend immediately.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER (1180px) ===== -->
+<footer class="relative w-full overflow-hidden bg-dark" style="height:1180px;">
+  <!-- Exported footer landscape with logo + gradient already composited -->
+  <div class="absolute left-0 right-0" style="top:435px;bottom:0;">
+    <img src="images/footer-bg.png" alt="" class="w-full h-full object-cover object-top">
+  </div>
+  <!-- Grid lines -->
+  <div class="absolute" style="left:32px;right:32px;top:0;bottom:0;z-index:1;">
+    <div class="gl gl-dk" style="left:0"></div>
+    <div class="gl gl-dk" style="left:455px"></div>
+    <div class="gl gl-dk" style="left:921px"></div>
+    <div class="gl gl-dk" style="right:0"></div>
+  </div>
+  <div class="relative z-[2]">
+    <!-- "Earn anytime." at (32, 0) — Left frame: decorator at (0,12), text at (20, 0) -->
+    <div class="absolute" style="left:32px;top:0;width:261px;height:112px;">
+      <span class="slabel slabel-dk text-grey-700 absolute" style="left:0;top:12px;">&nbsp;</span>
+      <p class="font-knapp font-medium text-[56px] leading-none tracking-[-0.56px] text-[#ededed]" style="padding-left:20px;">Earn<br>anytime.</p>
+    </div>
+    <!-- "From anywhere." at (487, 0) — Right frame: decorator at (0,12), text at (47, 0) -->
+    <div class="absolute" style="left:487px;top:0;width:416px;height:112px;">
+      <span class="slabel slabel-dk text-grey-700 absolute" style="left:0;top:12px;">&nbsp;</span>
+      <p class="font-knapp font-medium text-[56px] leading-none tracking-[-0.56px] text-[#ededed]" style="padding-left:47px;">From<br>anywhere.</p>
+    </div>
+    <!-- CTA at (954, 1) — inner button at (20, 20) w:414 h:64 -->
+    <div class="absolute" style="left:954px;top:1px;width:454px;">
+      <a href="#" class="cta-btn bg-grey-1100 border border-grey-1000 rounded-lg flex items-center justify-between h-[64px] pl-5 pr-2 ml-5 mt-5">
+        <span class="font-mono text-[13px] tracking-[0.78px] uppercase text-[#ededed] leading-none pt-px">Download for iOS</span>
+        <img src="images/app-store.svg" alt="App Store" class="w-12 h-12">
+      </a>
+    </div>
+    <!-- Company at (52, 245) -->
+    <div class="absolute" style="left:52px;top:245px;">
+      <p class="font-mono text-[11px] tracking-[0.66px] uppercase text-grey-700 mb-3">Company</p>
+      <a href="#" class="block font-knapp text-[16px] leading-[1.5] text-grey-600 hover:text-[#ededed] transition-colors mb-3">Careers</a>
+      <a href="#" class="block font-knapp text-[16px] leading-[1.5] text-grey-600 hover:text-[#ededed] transition-colors">Contact</a>
+    </div>
+    <!-- Resources at (265, 245) -->
+    <div class="absolute" style="left:265px;top:245px;">
+      <p class="font-mono text-[11px] tracking-[0.66px] uppercase text-grey-700 mb-3">Resources</p>
+      <a href="#" class="block font-knapp text-[16px] leading-[1.5] text-grey-600 hover:text-[#ededed] transition-colors mb-3">Privacy</a>
+      <a href="#" class="block font-knapp text-[16px] leading-[1.5] text-grey-600 hover:text-[#ededed] transition-colors">Terms of Service</a>
+    </div>
+    <!-- Socials at (1256, 296) -->
+    <div class="absolute flex gap-3" style="left:1256px;top:296px;">
+      <a href="#" class="social-btn w-9 h-9 bg-grey-1100 border border-grey-1000 rounded-md flex items-center justify-center"><img src="images/social-farcaster.svg" alt="" class="w-5 h-5 opacity-80"></a>
+      <a href="#" class="social-btn w-9 h-9 bg-grey-1100 border border-grey-1000 rounded-md flex items-center justify-center"><img src="images/social-x.svg" alt="" class="w-5 h-5 opacity-80"></a>
+      <a href="#" class="social-btn w-9 h-9 bg-grey-1100 border border-grey-1000 rounded-md flex items-center justify-center"><img src="images/social-linkedin.svg" alt="" class="w-5 h-5 opacity-80"></a>
+    </div>
+    <!-- Divider at (32, 356) w:1376 -->
+    <div class="absolute" style="left:32px;top:356px;right:32px;height:1px;border-top:1px dashed rgba(255,255,255,0.1);"></div>
+    <!-- Info at (52, 380) w:1336 -->
+    <div class="absolute flex items-center justify-between" style="left:52px;top:380px;width:1336px;">
+      <div class="flex gap-[68px]">
+        <span class="font-mono text-[11px] tracking-[0.66px] uppercase text-grey-700">A: San Francisco, CA</span>
+        <span class="font-mono text-[11px] tracking-[0.66px] uppercase text-grey-700">E: info@legend.com</span>
+      </div>
+      <span class="font-mono text-[11px] tracking-[0.66px] uppercase text-grey-700">&copy; 2025 Legend Labs, Inc. All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ===== JS ===== -->
+<script>
+  gsap.registerPlugin(ScrollTrigger);
+
+  gsap.utils.toArray('.reveal').forEach(el => {
+    gsap.fromTo(el, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' } });
+  });
+
+  gsap.utils.toArray('.hero-reveal').forEach(el => {
+    gsap.fromTo(el, { opacity: 0 }, { opacity: 1, duration: 1.2, delay: 0.3, ease: 'power2.out' });
+  });
+
+  const barContainer = document.querySelector('.bar-row')?.parentElement;
+  if (barContainer) {
+    ScrollTrigger.create({ trigger: barContainer, start: 'top 80%', once: true, onEnter: () => {
+      document.querySelectorAll('.bar-row').forEach(row => {
+        const bar = row.querySelector('.bar-fill');
+        const label = row.querySelector('.bar-label');
+        const w = row.dataset.width + 'px';
+        const d = parseFloat(row.dataset.delay) || 0;
+        gsap.to(bar, { width: w, duration: 1.4, delay: d, ease: 'power3.out' });
+        gsap.to(label, { opacity: 1, x: 0, duration: 0.6, delay: d + 0.6, ease: 'power2.out' });
+        gsap.fromTo(label, { x: -10 }, { x: 0, duration: 0.6, delay: d + 0.6, ease: 'power2.out' });
+      });
+    }});
+  }
+
+  gsap.utils.toArray('.counter').forEach(el => {
+    const t = parseInt(el.dataset.target); const o = { val: 0 };
+    gsap.to(o, { val: t, duration: 1.5, ease: 'power2.out', scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' }, onUpdate: () => { el.textContent = Math.round(o.val); } });
+  });
+  gsap.utils.toArray('.counter-dollar').forEach(el => {
+    const t = parseFloat(el.dataset.target); const o = { val: 0 };
+    gsap.to(o, { val: t, duration: 1.5, ease: 'power2.out', scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' }, onUpdate: () => { el.textContent = '$' + o.val.toFixed(1) + 'B'; } });
+  });
+
+  const nav = document.getElementById('nav');
+  const navBanner = document.getElementById('nav-banner');
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    const faq = document.querySelector('section.bg-dark');
+    const ft = faq ? faq.getBoundingClientRect().top + y - 60 : Infinity;
+    const footerEl = document.querySelector('footer');
+    const footerTop = footerEl ? footerEl.getBoundingClientRect().top + y - 60 : Infinity;
+    const inDark = y >= ft || y >= footerTop;
+    if (y > 100) {
+      nav.style.backdropFilter='blur(20px)'; nav.style.webkitBackdropFilter='blur(20px)';
+      nav.style.background = inDark ? 'rgba(19,19,19,0.85)' : 'rgba(248,248,248,0.85)';
+      const logo = nav.querySelector('a img[alt="Legend"]');
+      if (logo) logo.style.filter = inDark ? 'invert(1)' : 'none';
+    } else {
+      nav.style.background='transparent'; nav.style.backdropFilter='none'; nav.style.webkitBackdropFilter='none';
+      const logo = nav.querySelector('a img[alt="Legend"]');
+      if (logo) logo.style.filter = 'none';
+    }
+    if (navBanner) { navBanner.style.opacity = y > 300 ? '0' : '1'; navBanner.style.pointerEvents = y > 300 ? 'none' : 'auto'; }
+  }, { passive: true });
+
+  document.querySelectorAll('.faq-trigger').forEach(btn => {
+    btn.addEventListener('click', () => { const item = btn.closest('.faq-item'); const was = item.classList.contains('open'); document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open')); if (!was) item.classList.add('open'); });
+  });
+
+  document.querySelectorAll('.asset-filter').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.asset-filter').forEach(b => { b.classList.remove('active','text-text-1','border-dark'); b.classList.add('text-grey-700','border-transparent'); });
+      btn.classList.add('active','text-text-1','border-dark'); btn.classList.remove('text-grey-700','border-transparent');
+    });
+  });
+
+  document.querySelectorAll('.comparison-row').forEach(row => {
+    const g = row.querySelector('.grid'); if (!g) return;
+    const c = g.querySelector('p:first-child'); if (!c) return;
+    row.addEventListener('mouseenter', () => { c.style.color='#008500'; c.style.transition='color 0.3s ease'; });
+    row.addEventListener('mouseleave', () => { c.style.color=''; });
+  });
+
+  (function(){ const el=document.getElementById('hero-rate'); if(!el)return; setInterval(()=>{ el.textContent=(14.89+(Math.random()-0.5)*0.02).toFixed(2)+'%'; },3000); })();
+
+  gsap.to('#hero-video', { yPercent: 12, ease: 'none', scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: true } });
+</script>
+</body>
+</html>
