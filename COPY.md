@@ -16,26 +16,25 @@ nav_cta: Download
 ```
 hero_badge: Earn
 hero_headline: Earn up to
-hero_rate: 14.89%
-hero_subhead: Industry-leading rates, brought to you by DeFi.
-hero_body: Earn interest every second with industry-leading rates, powered by open markets and secured by public blockchains.
+hero_rate: 7.14%
+hero_subhead: Your bank would hate if you saw our rates.
+hero_body: Earn interest in real-time, powered by onchain money markets.
 hero_powered: Powered by
 ```
 
 ## Section 2: Real-time Compounding
 
 ```
-s2_heading: Real-time compounding.
-s2_body: No lockups. No fund holds. No TradFi funny business. Just yield that compounds continuously and transparently — in real time — while powering the internet of value's most liquid over-collateralized lending markets.
-```
+s2_heading: Real-Time Interest.
+s2_body: No lockups. No fund holds. No banker's hours funny business. Earn over 50x the national savings rate average on your cash, all from the comfort of your phone.
 
-## Section 3: Capture the Yield
+## Section 3: 50x the national savings rate average.
 
 ```
 s3_decorator: Rates
 s3_heading: Capture the yield you deserve.
-s3_body_1: Banks make money by lending out your savings and only sharing a fraction of the interest with you. With DeFi, there's no middleman to take a cut, so you capture what borrowers pay.
-s3_body_2: And because onchain lending markets are always transparent and verifiable, you can rest assured that your funds are there to be withdrawn anytime.
+s3_body_1: Banks make money by lending out your savings and only sharing a fraction of the interest with you. With onchain finance, there's no middleman to take a cut, so you capture what you were deserved all along.
+s3_body_2: Our markets are always on, meaning you can deposit or withdraw whenever you want, 24 hours a day, 7 days a week.
 s3_bar1_rate: 7.63%
 s3_bar1_label: Morpho · World Chain
 s3_bar2_rate: 5.00%
@@ -50,19 +49,19 @@ s3_bar4_label: Avg Bank Savings Account
 
 ```
 s4_decorator: Features
-s4_heading: The best way to earn onchain.
-s4_body: Legend makes earning with DeFi easy. Just add funds, supply them to a market, and watch the yield pile up. Withdraw anytime to access your savings whenever you need.
+s4_heading: Your money should work while you sleep.
+s4_body: Legend helps you earn interest on your assets, so they can go to work for you. Earn interest on USDC, ETH, and more. Fund and start earning in under 30 seconds.
 
 s4_card1_heading: Easily add funds from anywhere.
 s4_card1_body: Transfer USD directly from your bank account as USDC, or receive assets onchain from another wallet or exchange account.
 
-s4_card2_heading: The best rate is only ever two taps away.
+s4_card2_heading: Always gets the best rate.
 s4_card2_body: Legend makes it easy to migrate balances between protocols and networks so you're always maximizing your earning potential.
 
 s4_card3_heading: Trade with your earning balances.
 s4_card3_body: Balances can be earning right up until the moment you use them to trade, so you never miss out on a single block of compounding.
 
-s4_card4_heading: Automatically compound your rewards.
+s4_card4_heading: Reinvest your rewards.
 s4_card4_body: With Legend, "net APR" becomes your real APR. Eliminate price risk and opportunity cost by automatically re-investing your unclaimed rewards.
 ```
 
@@ -71,8 +70,8 @@ s4_card4_body: With Legend, "net APR" becomes your real APR. Eliminate price ris
 ```
 s5_decorator: Markets
 s5_heading: Real markets, real yield.
-s5_body: Legend integrates only the safest, most trusted DeFi protocols, markets, and vaults across supported blockchains.
-s5_body_sub: Rates shown below are variable and fluctuate continuously based on utilization.
+s5_body: Legend only integrates the safest, most trusted onchain infrasturcture. If it's in Legend, you know it's safe.
+s5_body_sub: Rates are variable and fluctuate based on utilization.
 
 s5_stat1_value: 33
 s5_stat1_label: Total Markets
@@ -120,8 +119,8 @@ s5_market8_label: Compound · Base
 
 ```
 s6_decorator: Comparison
-s6_heading: How Legend stacks up.
-s6_body: We're not the only high-yield savings option out there, but for savers who want competitive rates, maximum flexibility, and peace of mind — Legend is pretty hard to beat.
+s6_heading: The choice is clear.
+s6_body: Smart money knows that their assets need to be at work. Legend makes it easy to earn the best rate possible on your assets.
 
 s6_columns: Legend, Aave, Nook, Coinbase Lend, Robinhood Gold, HYSAs
 
