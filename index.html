@@ -717,9 +717,9 @@
 
 <!-- ===== FOOTER (1180px) ===== -->
 <footer class="relative w-full overflow-hidden bg-dark" style="height:1180px;">
-  <!-- Exported footer landscape with logo + gradient already composited -->
-  <div class="absolute left-0 right-0" style="top:435px;bottom:0;">
-    <img src="images/footer-bg.png" alt="" class="w-full h-full object-cover object-top">
+  <!-- PNG has transparency at top — dark bg shows through, landscape fades in naturally -->
+  <div class="absolute inset-0">
+    <img src="images/footer-bg.png" alt="" class="absolute bottom-0 left-0 w-full" style="height:745px;object-fit:cover;object-position:center bottom;">
   </div>
   <!-- Grid lines -->
   <div class="absolute" style="left:32px;right:32px;top:0;bottom:0;z-index:1;">
