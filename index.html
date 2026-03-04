@@ -717,8 +717,8 @@
 
 <!-- ===== FOOTER (1180px) ===== -->
 <footer class="relative w-full overflow-hidden bg-dark" style="height:1180px;">
-  <!-- Full-bleed PNG with baked-in alpha transparency — dark bg shows through top -->
-  <img src="images/footer-bg.png" alt="" class="absolute inset-0 w-full h-full object-cover object-bottom">
+  <!-- PNG with alpha transparency — positioned at y:435 per Figma, dark bg shows through transparent top -->
+  <img src="images/footer-bg.png" alt="" class="absolute left-0 w-full" style="top:335px;bottom:0;object-fit:cover;object-position:center top;">
   <!-- Grid lines -->
   <div class="absolute" style="left:32px;right:32px;top:0;bottom:0;z-index:1;">
     <div class="gl gl-dk" style="left:0"></div>
