@@ -86,158 +86,103 @@
       .gl, .gl-h { display: none; }
       .sh { font-size: 32px; }
 
-      /* Force all sections to auto height and flow layout */
-      #hero,
-      #hero ~ section,
-      footer {
+      /* All sections: auto height, flow layout */
+      #hero, #hero ~ section, footer {
         height: auto !important;
         position: relative !important;
         padding: 60px 20px !important;
         border-radius: 0 !important;
       }
 
-      /* Hero overrides */
-      #hero {
-        min-height: 100vh;
-        min-height: 100svh;
-        padding: 0 !important;
-      }
+      /* Hero */
+      #hero { min-height: 100vh; min-height: 100svh; padding: 0 !important; }
       #hero > div:not([class*="gl"]):not([style*="backdrop"]) {
-        position: relative !important;
-        left: auto !important;
-        top: auto !important;
-        right: auto !important;
-        bottom: auto !important;
-        width: 100% !important;
+        position: relative !important; left: auto !important; top: auto !important;
+        right: auto !important; bottom: auto !important; width: 100% !important;
       }
       #hero > .absolute.inset-0.z-\[5\] {
-        position: relative !important;
-        display: flex;
-        flex-direction: column;
-        gap: 24px;
-        padding: 100px 20px 40px;
+        position: relative !important; display: flex; flex-direction: column; gap: 24px; padding: 100px 20px 40px;
       }
       #hero > .absolute.inset-0.z-\[5\] > .hero-reveal {
-        position: relative !important;
-        left: auto !important;
-        top: auto !important;
-        width: 100% !important;
-        opacity: 1 !important;
+        position: relative !important; left: auto !important; top: auto !important; width: 100% !important; opacity: 1 !important;
       }
       #hero h1 { font-size: 40px !important; }
       #hero .absolute.z-\[3\] { display: none; }
 
-      /* Generic: convert absolutely-positioned children to flow */
+      /* Generic: flow all absolute children in sections */
       section:not(#hero) > .absolute:not(.gl):not([class*="gl"]),
       section:not(#hero) > div > .absolute:not(.gl):not([class*="gl"]),
       footer > .relative > .absolute {
-        position: relative !important;
-        left: auto !important;
-        top: auto !important;
-        right: auto !important;
-        bottom: auto !important;
-        width: 100% !important;
-        margin-bottom: 24px;
+        position: relative !important; left: auto !important; top: auto !important;
+        right: auto !important; bottom: auto !important; width: 100% !important; margin-bottom: 24px;
       }
 
-      /* Section headings — undo the container trick */
-      section .sh {
-        text-indent: 0 !important;
-        padding-left: 0 !important;
-      }
-      section .slabel {
-        position: relative !important;
-        display: block;
-        margin-bottom: 8px;
-      }
+      /* Section headings */
+      section .sh { text-indent: 0 !important; padding-left: 0 !important; }
+      section .slabel { position: relative !important; display: block; margin-bottom: 8px; }
 
-      /* Section 2: phone visual */
-      section:nth-of-type(2) .float-anim { animation: none; }
-      section:nth-of-type(2) [style*="width:878px"] {
-        width: 100% !important;
-        height: 400px !important;
-      }
+      /* Section 2: video frame */
+      section:nth-of-type(2) [style*="width:878px"] { width: 100% !important; height: 300px !important; }
 
-      /* Section 3: bars */
-      .bar-row { flex-wrap: wrap; }
-      .bar-fill { height: 60px !important; }
+      /* Section 3: bars — cap widths to container */
+      .bar-fill { max-width: 100% !important; height: 60px !important; }
       .bar-row .bar-label p:first-child { font-size: 28px !important; }
 
-      /* Section 4: feature cards */
+      /* Section 4: feature cards — convert to flow */
       section:nth-of-type(4) [style*="width:464px"],
       section:nth-of-type(4) [style*="width:454px"] {
-        width: 100% !important;
-        height: auto !important;
+        width: 100% !important; height: auto !important; position: relative !important;
+        left: auto !important; top: auto !important;
       }
-      section:nth-of-type(4) [style*="width:424px"],
-      section:nth-of-type(4) [style*="width:414px"] {
-        width: 100% !important;
-        height: 300px !important;
-        margin: 0 !important;
+      /* Card internal: flow the visual frame, heading, and body */
+      section:nth-of-type(4) [style*="width:464px"] > .absolute,
+      section:nth-of-type(4) [style*="width:454px"] > .absolute,
+      section:nth-of-type(4) [style*="width:464px"] > .relative,
+      section:nth-of-type(4) [style*="width:454px"] > .relative {
+        position: relative !important; left: auto !important; top: auto !important;
+        right: auto !important; bottom: auto !important; width: 100% !important; margin-bottom: 12px;
+      }
+      section:nth-of-type(4) [style*="margin:16px"] {
+        width: 100% !important; height: 280px !important; margin: 0 0 16px 0 !important;
       }
       section:nth-of-type(4) .card-visual img { object-fit: contain !important; }
-      /* Large body text in features section */
       section:nth-of-type(4) [style*="width:767px"] { font-size: 24px !important; }
 
       /* Section 5: market grid */
-      .market-card {
-        width: 100% !important;
-        height: auto !important;
-      }
-      section:nth-of-type(5) .grid { grid-template-columns: repeat(2, 1fr) !important; }
+      .market-card { width: 100% !important; height: auto !important; }
+      section:nth-of-type(5) .grid { grid-template-columns: repeat(2, 1fr) !important; width: 100% !important; }
       section:nth-of-type(5) [style*="width:918px"] { width: 100% !important; }
       section:nth-of-type(5) [style*="width:191px"] { width: auto !important; }
 
       /* Section 6: comparison table — horizontal scroll */
-      section:nth-of-type(6) [style*="width:1376px"] {
-        width: 100% !important;
-        overflow-x: auto;
-      }
+      section:nth-of-type(6) [style*="width:1376px"] { width: 100% !important; overflow-x: auto; }
       section:nth-of-type(6) .comparison-row,
-      section:nth-of-type(6) [style*="height:79px"] {
-        min-width: 900px;
-      }
+      section:nth-of-type(6) [style*="height:79px"] { min-width: 900px; }
       section:nth-of-type(6) [style*="width:490px"] { width: 160px !important; min-width: 160px; }
       section:nth-of-type(6) [style*="width:854px"] { width: 740px !important; }
 
-      /* Section 7: FAQ — stack heading above questions */
+      /* Section 7: FAQ */
       section.bg-dark { padding: 60px 20px !important; }
-      section.bg-dark > .relative {
-        display: flex;
-        flex-direction: column;
-        gap: 32px;
-      }
+      section.bg-dark > .relative { display: flex; flex-direction: column; gap: 32px; }
       section.bg-dark .sh { font-size: 28px !important; }
-      section.bg-dark [style*="margin-left:487px"] {
-        margin-left: 0 !important;
-        width: 100% !important;
-      }
+      section.bg-dark [style*="margin-left:487px"] { margin-left: 0 !important; width: 100% !important; }
       section.bg-dark [style*="width:455px"] {
-        position: relative !important;
-        left: auto !important;
-        top: auto !important;
-        width: 100% !important;
+        position: relative !important; left: auto !important; top: auto !important; width: 100% !important;
       }
 
       /* Footer */
-      footer { height: auto !important; min-height: 800px; }
+      footer { height: auto !important; min-height: 700px; }
       footer > .relative { position: relative !important; display: flex; flex-direction: column; gap: 20px; padding: 0 20px; }
       footer > .relative > .absolute {
-        position: relative !important;
-        left: auto !important;
-        top: auto !important;
-        width: 100% !important;
-        margin: 0;
+        position: relative !important; left: auto !important; top: auto !important; width: 100% !important; margin: 0;
       }
-      footer [style*="width:261px"] p,
-      footer [style*="width:416px"] p { font-size: 32px !important; }
-      footer [style*="top:435px"] { top: auto !important; bottom: 0; height: 400px !important; }
+      footer [style*="width:261px"], footer [style*="width:416px"] { width: auto !important; }
+      footer [style*="width:261px"] p, footer [style*="width:416px"] p { font-size: 32px !important; }
+      footer [style*="width:454px"] { width: 100% !important; }
+      footer [style*="width:454px"] a { margin: 0 !important; }
+      footer > img { top: auto !important; bottom: 0 !important; height: 350px !important; }
       footer [style*="top:356px"] { display: none; }
-      footer [style*="top:380px"] {
-        flex-direction: column !important;
-        gap: 8px !important;
-        width: 100% !important;
-      }
+      footer [style*="top:380px"] { flex-direction: column !important; gap: 8px !important; width: 100% !important; }
       footer [style*="top:380px"] > div { flex-direction: column !important; gap: 4px !important; }
       footer [style*="left:1256px"] { left: auto !important; }
     }
