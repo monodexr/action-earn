@@ -717,10 +717,10 @@
 
 <!-- ===== FOOTER (1180px) ===== -->
 <footer class="relative w-full overflow-hidden bg-dark" style="height:1180px;">
-  <!-- PNG has transparency at top — dark bg shows through, landscape fades in naturally -->
-  <div class="absolute inset-0">
-    <img src="images/footer-bg.png" alt="" class="absolute bottom-0 left-0 w-full" style="height:745px;object-fit:cover;object-position:center bottom;">
-  </div>
+  <!-- Landscape image anchored to bottom -->
+  <img src="images/footer-bg.png" alt="" class="absolute left-0 w-full" style="bottom:0;height:745px;object-fit:cover;object-position:center bottom;">
+  <!-- Gradient overlay: solid dark at top, fades out to reveal image -->
+  <div class="absolute inset-0" style="background:linear-gradient(to bottom, #131313 0%, #131313 28%, rgba(19,19,19,0.92) 35%, rgba(19,19,19,0.6) 45%, rgba(19,19,19,0.25) 55%, transparent 65%);"></div>
   <!-- Grid lines -->
   <div class="absolute" style="left:32px;right:32px;top:0;bottom:0;z-index:1;">
     <div class="gl gl-dk" style="left:0"></div>
